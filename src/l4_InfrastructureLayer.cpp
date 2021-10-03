@@ -43,10 +43,18 @@ bool ACollector::isRemoved(size_t index) const
   return _removed_signs[index];
 }
 
+bool ACollector::isRobbed(size_t index) const
+{
+  assert(index < _removed_signs.size());
+
+  return _robbed_signs[index];
+}
+
 void ACollector::addItem(shared_ptr<ICollectable> item)
 {
   _items.emplace_back(item);
   _removed_signs.emplace_back(false);
+  _robbed_signs.emplace_back(false);
 }
 
 void ACollector::removeItem(size_t index)
@@ -58,6 +66,18 @@ void ACollector::removeItem(size_t index)
   {
     _removed_signs[index] = true;
     ++_removed_count;
+  }
+}
+
+void ACollector::robItem(size_t index)
+{
+  assert(index < _items.size());
+  assert(index < _robbed_signs.size());
+
+  if (!_robbed_signs[index])
+  {
+    _robbed_signs[index] = true;
+    ++_robbed_count;
   }
 }
 

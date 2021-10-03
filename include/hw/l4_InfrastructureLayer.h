@@ -36,13 +36,16 @@ public:
 
 class ACollector
 {
+private:
   std::vector<std::shared_ptr<ICollectable>> _items;
-  std::vector<bool> _removed_signs;
-  size_t _removed_count = 0;
+  std::vector<bool> _removed_signs, _robbed_signs;
+
+  size_t _removed_count = 0, _robbed_count = 0;
 
   bool invariant() const
   {
-    return _items.size() == _removed_signs.size() && _removed_count <= _items.size();
+    return _items.size() == _removed_signs.size() && _removed_count <= _items.size() &&
+           _robbed_count <= _items.size();
   }
 
 public:
@@ -56,9 +59,13 @@ public:
 
   bool isRemoved(size_t index) const;
 
+  bool isRobbed(size_t index) const;
+
   void addItem(std::shared_ptr<ICollectable> item);
 
   void removeItem(size_t index);
+
+  void robItem(size_t index);
 
   void updateItem(size_t index, const std::shared_ptr<ICollectable> &item);
 

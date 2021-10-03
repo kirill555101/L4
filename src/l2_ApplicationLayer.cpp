@@ -71,6 +71,18 @@ bool Application::performCommand(const std::vector<std::string> &args)
     return true;
   }
 
+  if (args[0] == "rob")
+  {
+    if (args.size() != 2)
+    {
+      _out.Output("Некорректное количество аргументов команды rob");
+      return false;
+    }
+
+    _col.robItem(stoul(args[1]));
+    return true;
+  }
+
   if (args[0] == "u" || args[0] == "update")
   {
     if (args.size() != 7)
@@ -97,7 +109,7 @@ bool Application::performCommand(const std::vector<std::string> &args)
     {
       const Exhibit &item = static_cast<Exhibit &>(*_col.getItem(i));
 
-      if (!_col.isRemoved(i))
+      if (!_col.isRemoved(i) && !_col.isRobbed(i))
       {
         _out.Output("[" + std::to_string(i) + "] " + item.getSpecialName() + " " +
                     std::to_string(item.getMetalType()) + " " + item.getCurrencyName() + " " +
@@ -108,6 +120,32 @@ bool Application::performCommand(const std::vector<std::string> &args)
 
     _out.Output("Количество элементов в коллекции: " + std::to_string(count));
     return true;
+  }
+
+  if (args[0] == "vr" || args[0] == "viewreport")
+  {
+    if (args.size() != 1)
+    {
+      _out.Output("Некорректное количество аргументов команды view");
+      return false;
+    }
+
+    size_t count = 0;
+    for (size_t i = 0; i < _col.getSize(); ++i)
+    {
+      const Exhibit &item = static_cast<Exhibit &>(*_col.getItem(i));
+
+      if (!_col.isRemoved(i) && _col.isRobbed(i))
+      {
+        _out.Output("[" + std::to_string(i) + "] " + item.getSpecialName() + " has been robbed!" +
+                    " Insurance = " + std::to_string(item.getInsurance().getTotalPrice()) + " " +
+                    item.getCurrencyName());
+        ++count;
+      }
+    }
+
+    _out.Output("Количество ограбленных элементов в коллекции: " + std::to_string(count));
+    return false;
   }
 
   _out.Output("Недопустимая команда '" + args[0] + "'");

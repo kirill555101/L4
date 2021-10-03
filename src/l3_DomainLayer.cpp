@@ -1,5 +1,20 @@
 #include "hw/l3_DomainLayer.h"
 
+bool Insurance::invariant() const
+{
+  return _total_price >= 0;
+}
+
+Insurance::Insurance(int total_price) : _total_price(total_price)
+{
+  assert(invariant());
+}
+
+int Insurance::getTotalPrice() const
+{
+  return _total_price;
+}
+
 bool Exhibit::invariant() const
 {
   return _special_name.size() <= MAX_STRING_LENGTH && _metal_type >= RARE && _metal_type <= LIGHT &&
@@ -9,7 +24,8 @@ bool Exhibit::invariant() const
 Exhibit::Exhibit(const std::string &special_name, MetalType metal_type, const std::string &currency_name,
                  int count_of_currency, int count_of_coins)
     : _special_name(special_name), _metal_type(metal_type), _currency_name(currency_name),
-      _count_of_currency(count_of_currency), _count_of_coins(count_of_coins)
+      _count_of_currency(count_of_currency), _count_of_coins(count_of_coins),
+      _insurance(_count_of_currency * _count_of_coins)
 {
   assert(invariant());
 }
@@ -37,6 +53,11 @@ int Exhibit::getCountOfCurrency() const
 int Exhibit::getCountOfCoins() const
 {
   return _count_of_coins;
+}
+
+Insurance Exhibit::getInsurance() const
+{
+  return _insurance;
 }
 
 bool Exhibit::write(std::ostream &os)

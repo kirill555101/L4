@@ -12,8 +12,23 @@ enum MetalType
   LIGHT
 };
 
+class Insurance
+{
+private:
+  int _total_price;
+
+protected:
+  bool invariant() const;
+
+public:
+  Insurance(int total_price);
+
+  int getTotalPrice() const;
+};
+
 class Exhibit : public ICollectable
 {
+private:
   std::string _special_name;
 
   MetalType _metal_type;
@@ -21,6 +36,8 @@ class Exhibit : public ICollectable
   std::string _currency_name;
 
   int _count_of_currency, _count_of_coins;
+
+  Insurance _insurance;
 
 protected:
   bool invariant() const;
@@ -46,6 +63,8 @@ public:
   int getCountOfCurrency() const;
 
   int getCountOfCoins() const;
+
+  Insurance getInsurance() const;
 
   virtual bool write(std::ostream &os) override;
 };
